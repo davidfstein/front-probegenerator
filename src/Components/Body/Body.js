@@ -140,7 +140,7 @@ export default class Body extends React.Component {
                                     <Label for="maxTm">
                                         Max. Melting Temp.
                                     </Label>
-                                    <Input type="number" defaultValue="72" id="probeLength" name="probeLength"></Input>
+                                    <Input type="number" defaultValue="72" id="maxTm" name="maxTm"></Input>
                                 </Col>
                                 <Col lg="2">
                                     <Label for="saltConcentration">
