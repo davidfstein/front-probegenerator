@@ -1,6 +1,6 @@
 import React from 'react';
 import './Body.css';
-import { generateProbes } from '../../Services/probe-service';
+import { generateProbes, getBowtieIndexOptions } from '../../Services/probe-service';
 import { 
     Form, 
     FormGroup, 
@@ -21,12 +21,18 @@ export default class Body extends React.Component {
         super();
         this.state = {
             initiatorsAdded: 1,
+            bowtieOptions: []
         }
+    }
+
+    componentDidMount() {
+        this.generateBowtieIndexOptions();
     }
 
     handleAddInitiatorClick = () => {
         this.setState({
-            initiatorsAdded: this.state.initiatorsAdded + 1
+            initiatorsAdded: this.state.initiatorsAdded + 1,
+            bowtieOptions: this.state.bowtieOptions
         });
     }
 
@@ -56,6 +62,22 @@ export default class Body extends React.Component {
         return rows;
     }
 
+    generateBowtieIndexOptions = async () => {
+        const options = await getBowtieIndexOptions();
+        const optionElements = [];
+        for (let i = 0; i < options.length; i++) {
+            optionElements.push(
+                <option key={i}>
+                    {options[i]}
+                </option>
+            )
+        }
+        this.setState({
+            initiatorsAdded: this.state.initiatorsAdded,
+            bowtieOptions: optionElements
+        });
+    }
+
     submitForm = () => {
         const form = document.getElementById("generateForm");
         const data = new FormData(form);
@@ -73,12 +95,7 @@ export default class Body extends React.Component {
                                 Bowtie2 Index
                             </Label>
                             <Input className="col-lg-2" type="select" name="bowtieSelect" id="bowtieSelect">
-                                <option>
-                                    Axolotl
-                                </option>
-                                <option>
-                                    Mouse (mm10)
-                                </option>
+                                {this.state.bowtieOptions}
                             </Input>
                         </FormGroup>
                         <FormGroup>
@@ -155,6 +172,12 @@ export default class Body extends React.Component {
                                     <Input type="number" defaultValue="30" id="formamide" name="formamide"></Input>
                                 </Col>
                             </Row>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label for="email">
+                                Email
+                            </Label>
+                            <Input className="col-lg-2" type="email" name="email" id="email"></Input>
                         </FormGroup>
                         <Button type="button" onClick={this.submitForm} color="primary">
                             Submit
