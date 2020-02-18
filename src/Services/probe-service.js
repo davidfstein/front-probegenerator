@@ -8,6 +8,12 @@ const generateProbes = async (formData) => {
     return await response.json();
 }
 
+const getBowtieIndexOptions = async () => {
+    const response = await fetch(`${Constants.API_URL}/bowtieIndexes`);
+    return await response.json();
+}
+
 export {
     generateProbes,
+    getBowtieIndexOptions
 }
