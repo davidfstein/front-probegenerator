@@ -5,7 +5,7 @@ const generateProbes = async (formData) => {
         method: "POST",
         body: formData,
     });
-    return await response.json();
+    return response.status;
 }
 
 const getBowtieIndexOptions = async () => {

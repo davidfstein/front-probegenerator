@@ -1,6 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import './Body.css';
 import { generateProbes, getBowtieIndexOptions } from '../../Services/probe-service';
+import { checkCaptcha } from '../../Services/captcha-service';
+import Recaptcha from 'react-recaptcha';
 import { 
     Form, 
     FormGroup, 
@@ -15,13 +18,14 @@ import {
     CardBody } 
 from 'reactstrap';
 
-export default class Body extends React.Component {
+class Body extends React.Component {
 
     constructor() {
         super();
         this.state = {
             initiatorsAdded: 1,
-            bowtieOptions: []
+            bowtieOptions: [],
+            verified: false
         }
     }
 
@@ -78,10 +82,48 @@ export default class Body extends React.Component {
         });
     }
 
-    submitForm = () => {
+    verifyCallback = async (value) => {
+        // Have to do this ridiculousness because formidable and body-parse
+        // don't play nice. Thats what I get for using libraries.
+        const data = new FormData();
+        data.append('g-recaptcha-response', value);
+        const result = await checkCaptcha(data);
+        if (result !== this.state.verified) {
+            this.setState({
+                initiatorsAdded: this.state.initiatorsAdded,
+                bowtieOptions: this.state.bowtieOptions,
+                verified: result
+            })
+        }
+    }
+
+    onloadCallback = () => {
+        console.log("Hi");
+    }
+
+    submitForm = async () => {
         const form = document.getElementById("generateForm");
         const data = new FormData(form);
-        generateProbes(data);
+        const status = await generateProbes(data);
+        if (status === 200) {
+            this.props.history.push({
+                pathname: '/results',
+                state: { 
+                    head: "Thank You!",
+                    body: "Your data is being processed. You will recieve an email with your results shortly.",
+                    submitted: true
+                }
+            });
+        } else {
+            this.props.history.push({
+                pathname: '/results',
+                state: { 
+                    head: "Something went wrong...",
+                    body: "There was a problem processing your data. Please try again. If the issue persists, contact us at davidmonlab.gmail.com.",
+                    submitted: true
+                }
+            });
+        }
     }
 
     render() {
@@ -179,12 +221,27 @@ export default class Body extends React.Component {
                             </Label>
                             <Input className="col-lg-2" type="email" name="email" id="email"></Input>
                         </FormGroup>
-                        <Button type="button" onClick={this.submitForm} color="primary">
-                            Submit
-                        </Button>
+                        <Recaptcha
+                            sitekey="6LdSQNwUAAAAACvxsNUrlK9civfkN2V1m_JIv0jE"
+                            verifyCallback={this.verifyCallback}
+                            onloadCallback={this.onloadCallback}
+                            render='explicit'
+                        />
+                        {this.state.verified ?
+                            <Button type="button" onClick={this.submitForm} color="primary">
+                                Submit
+                            </Button>
+                            :
+                            <Button type="button" onClick={this.submitForm} color="primary" disabled>
+                                Submit
+                            </Button>
+                        }
+                        
                     </CardBody>
                 </Card>
             </Form>    
         )
     }
 }
+
+export default withRouter(Body);
