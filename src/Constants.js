@@ -1,5 +1,5 @@
 const constants = {
-    API_URL: "http://localhost:5000/api",
+    API_URL: "https://probeback.herokuapp.com/api",
 }
 
 export default constants;
