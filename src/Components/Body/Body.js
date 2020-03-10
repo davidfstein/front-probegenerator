@@ -4,6 +4,7 @@ import './Body.css';
 import { generateProbes, getBowtieIndexOptions } from '../../Services/probe-service';
 import { checkCaptcha } from '../../Services/captcha-service';
 import Recaptcha from 'react-recaptcha';
+import Constants from '../../Constants';
 import { 
     Form, 
     FormGroup, 
@@ -23,7 +24,7 @@ class Body extends React.Component {
     constructor() {
         super();
         this.state = {
-            initiatorsAdded: 1,
+            initiatorsAdded: 4,
             bowtieOptions: [],
             verified: false
         }
@@ -42,23 +43,28 @@ class Body extends React.Component {
 
     renderInitiators = () => {
         const rows = [];
-        for (let i = 0; i < this.state.initiatorsAdded; i++) {
+        for (let i = 1; i <= this.state.initiatorsAdded; i++) {
+            const nameKey = `B${i}_NAME`;
+            const leftSeqKey = `B${i}_LEFT_SEQUENCE`;
+            const leftSpacerKey = `B${i}_LEFT_SPACER`;
+            const rightSeqKey = `B${i}_RIGHT_SEQUENCE`;
+            const rightSpacerKey = `B${i}_RIGHT_SPACER`;
             rows.push(
                 <Row key="i">
                     <Col lg="1">
-                        <Input type="text" name={`initiator${i}`} id={`initiator${i}`} maxLength="2" placeholder="Name"></Input>
+                        <Input type="text" name={`initiator${i}`} id={`initiator${i}`} maxLength="2" placeholder="Name" defaultValue={Constants[nameKey]}></Input>
                     </Col>
                     <Col lg="2">
-                        <Input type="text" name={`initiator${i}Left`} id={`initiator${i}Left`} placeholder="Left Sequence"></Input>
+                        <Input type="text" name={`initiator${i}Left`} id={`initiator${i}Left`} placeholder="Left Sequence" defaultValue={Constants[leftSeqKey]}></Input>
                     </Col>
                     <Col lg="2">
-                        <Input type="text" name={`initiator${i}LeftSpacer`} id={`initiator${i}LeftSpacer`} maxLength="2" placeholder="Left Spacer"></Input>
+                        <Input type="text" name={`initiator${i}LeftSpacer`} id={`initiator${i}LeftSpacer`} maxLength="2" placeholder="Left Spacer" defaultValue={Constants[leftSpacerKey]}></Input>
                     </Col>
                     <Col lg="2">
-                        <Input type="text" name={`initiator${i}Right`} id={`initiator${i}Right`} placeholder="Right Sequence"></Input>
+                        <Input type="text" name={`initiator${i}Right`} id={`initiator${i}Right`} placeholder="Right Sequence" defaultValue={Constants[rightSeqKey]}></Input>
                     </Col>
                     <Col lg="2">
-                        <Input type="text" name={`initiator${i}RightSpacer`} id={`initiator${i}RightSpacer`} maxLength="2" placeholder="Right Spacer"></Input>
+                        <Input type="text" name={`initiator${i}RightSpacer`} id={`initiator${i}RightSpacer`} maxLength="2" placeholder="Right Spacer" defaultValue={Constants[rightSpacerKey]}></Input>
                     </Col>
                 </Row>
             )
