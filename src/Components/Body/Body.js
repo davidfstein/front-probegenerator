@@ -16,7 +16,8 @@ import {
     Button, 
     Card, 
     CardHeader, 
-    CardBody } 
+    CardBody,
+    Collapse } 
 from 'reactstrap';
 
 class Body extends React.Component {
@@ -26,7 +27,8 @@ class Body extends React.Component {
         this.state = {
             initiatorsAdded: 4,
             bowtieOptions: [],
-            verified: false
+            verified: false,
+            isOpen: false
         }
     }
 
@@ -106,6 +108,8 @@ class Body extends React.Component {
     onloadCallback = () => {
         console.log("Hi");
     }
+
+    toggle = () => this.setState({isOpen: !this.state.isOpen});
 
     submitForm = async () => {
         const form = document.getElementById("generateForm");
@@ -227,6 +231,16 @@ class Body extends React.Component {
                             </Label>
                             <Input className="col-lg-2" type="email" name="email" id="email"></Input>
                         </FormGroup>
+                        <p class="clickable" onClick={this.toggle}>Advanced&#9660;</p>
+                        <Collapse isOpen={this.state.isOpen}>
+                            <FormGroup>
+                                <Label for="outputCleanSelect">Output Clean Method</Label>
+                                <Input className="col-lg-2" type="select" name="outputCleanSelect" id="outputCleanSelect">
+                                    <option defaultChecked>Unique</option>
+                                    <option>LDA</option>
+                                </Input>
+                            </FormGroup>
+                        </Collapse>
                         <Recaptcha
                             sitekey="6LdSQNwUAAAAACvxsNUrlK9civfkN2V1m_JIv0jE"
                             verifyCallback={this.verifyCallback}

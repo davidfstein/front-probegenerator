@@ -1,3 +1,8 @@
 .addInitiator {
     margin-top: 10px;
 }
+
+.clickable:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
